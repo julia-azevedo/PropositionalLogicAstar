@@ -1,0 +1,138 @@
+class PriorityQueue:
+    def __init__(self):
+        self.elements = []
+
+    def empty(self):
+        return len(self.elements) == 0
+
+    def put(self, item, priority):
+        self.elements.append((priority, item))
+        self.elements.sort(key=lambda x: x[0])
+
+    def get(self):
+        return self.elements.pop(0)[1]
+
+
+def apply_rule(rule, kb):
+    if rule == "MP":
+        for a in kb:
+            if "->" in a:
+                premise, conclusion = a.split("->")
+                premise = premise.strip().split("&")
+                if all(p.strip() in kb for p in premise):
+                    return kb + [conclusion.strip()], conclusion.strip()
+    return kb, None
+
+
+def a_star_proof(goal, knowledge_base, inference_rules):
+    frontier = PriorityQueue()
+    frontier.put((0, [], knowledge_base))
+
+    while not frontier.empty():
+        cost, path, current_kb = frontier.get()
+
+        if goal in current_kb:
+            return path + [goal]
+
+        for rule in inference_rules:
+            new_kb, new_inference = apply_rule(rule, current_kb)
+            if new_inference and new_inference not in path:
+                new_cost = cost + 1
+                heuristic = len(goal) - len(new_kb)
+                frontier.put((new_cost + heuristic, path + [new_inference], new_kb))
+
+    return None
+
+
+if __name__ == "__main__":
+    # Recebe input do usuário
+    knowledge_base = [
+        "(A & B) -> C",
+        "A & D",
+        "(C & D) -> E",
+        "(B & E & F) -> G",
+        "(A & E) -> H",
+        "(D & E & H) -> I",
+        "A",
+        "B",
+        "F"
+    ]
+    
+    goal = "H"
+    inference_rules = ["MP"]  # Adicione mais regras conforme necessário
+
+    # Chama a função A* para prova do teorema
+    result = a_star_proof(goal, knowledge_base, inference_rules)
+    if result:
+        print(f"Prova encontrada: {' -> '.join(result)}")
+    else:
+        print("Prova não encontrada.")
+class PriorityQueue:
+    def __init__(self):
+        self.elements = []
+
+    def empty(self):
+        return len(self.elements) == 0
+
+    def put(self, item, priority):
+        self.elements.append((priority, item))
+        self.elements.sort(key=lambda x: x[0])
+
+    def get(self):
+        return self.elements.pop(0)[1]
+
+
+def apply_rule(rule, kb):
+    if rule == "MP":
+        for a in kb:
+            if "->" in a:
+                premise, conclusion = a.split("->")
+                premise = premise.strip().split("&")
+                if all(p.strip() in kb for p in premise):
+                    return kb + [conclusion.strip()], conclusion.strip()
+    return kb, None
+
+
+def a_star_proof(goal, knowledge_base, inference_rules):
+    frontier = PriorityQueue()
+    frontier.put((0, [], knowledge_base))
+
+    while not frontier.empty():
+        cost, path, current_kb = frontier.get()
+
+        if goal in current_kb:
+            return path + [goal]
+
+        for rule in inference_rules:
+            new_kb, new_inference = apply_rule(rule, current_kb)
+            if new_inference and new_inference not in path:
+                new_cost = cost + 1
+                heuristic = len(goal) - len(new_kb)
+                frontier.put((new_cost + heuristic, path + [new_inference], new_kb))
+
+    return None
+
+
+if __name__ == "__main__":
+    # Recebe input do usuário
+    knowledge_base = [
+        "(A & B) -> C",
+        "A & D",
+        "(C & D) -> E",
+        "(B & E & F) -> G",
+        "(A & E) -> H",
+        "(D & E & H) -> I",
+        "A",
+        "B",
+        "F"
+    ]
+    
+    goal = "H"
+    inference_rules = ["MP"]  # Adicione mais regras conforme necessário
+
+    # Chama a função A* para prova do teorema
+    result = a_star_proof(goal, knowledge_base, inference_rules)
+    if result:
+        print(f"Prova encontrada: {' -> '.join(result)}")
+    else:
+        print("Prova não encontrada.")
